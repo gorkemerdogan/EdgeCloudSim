@@ -30,6 +30,10 @@ public class AircraftHangarNetworkModel extends NetworkModel {
 	public static enum LINK_TYPE {DOWNLOAD, UPLOAD};
 	public static double MAN_BW = 1300*1024; //Kbps
 
+	private static final double EDGE_LATENCY = 0.03; // 30 ms
+	private static final double CLOUD_LATENCY = 0.3; // 300 ms
+	private static final double BANDWIDTH = 1000; // Mbps, adjustable
+
 	@SuppressWarnings("unused")
 	private int manClients;
 	private int[] wanClients;
@@ -225,25 +229,33 @@ public class AircraftHangarNetworkModel extends NetworkModel {
     */
 	@Override
 	public double getUploadDelay(int sourceDeviceId, int destDeviceId, Task task) {
-		double delay = 0;
-		
-		//special case for man communication
-		if(sourceDeviceId == destDeviceId && sourceDeviceId == SimSettings.GENERIC_EDGE_DEVICE_ID){
-			return delay = getManUploadDelay();
-		}
-		
-		Location accessPointLocation = SimManager.getInstance().getMobilityModel().getLocation(sourceDeviceId,CloudSim.clock());
 
-		//mobile device to cloud server
-		if(destDeviceId == SimSettings.CLOUD_DATACENTER_ID){
-			delay = getWanUploadDelay(accessPointLocation, task.getCloudletFileSize());
+
+		if (destDeviceId == SimSettings.CLOUD_DATACENTER_ID) {
+			return (task.getCloudletFileSize() * 8) / BANDWIDTH + CLOUD_LATENCY;
+		} else {
+			return EDGE_LATENCY;
 		}
-		//mobile device to edge device (wifi access point)
-		else if (destDeviceId == SimSettings.GENERIC_EDGE_DEVICE_ID) {
-			delay = getWlanUploadDelay(accessPointLocation, task.getCloudletFileSize());
-		}
-		
-		return delay;
+
+//		double delay = 0;
+//
+//		//special case for man communication
+//		if(sourceDeviceId == destDeviceId && sourceDeviceId == SimSettings.GENERIC_EDGE_DEVICE_ID){
+//			return delay = getManUploadDelay();
+//		}
+//
+//		Location accessPointLocation = SimManager.getInstance().getMobilityModel().getLocation(sourceDeviceId,CloudSim.clock());
+//
+//		//mobile device to cloud server
+//		if(destDeviceId == SimSettings.CLOUD_DATACENTER_ID){
+//			delay = getWanUploadDelay(accessPointLocation, task.getCloudletFileSize());
+//		}
+//		//mobile device to edge device (wifi access point)
+//		else if (destDeviceId == SimSettings.GENERIC_EDGE_DEVICE_ID) {
+//			delay = getWlanUploadDelay(accessPointLocation, task.getCloudletFileSize());
+//		}
+//
+//		return delay;
 	}
 
     /**

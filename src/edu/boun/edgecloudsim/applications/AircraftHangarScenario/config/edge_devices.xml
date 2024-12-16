@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<edge_devices>
+	<device id="1" name="Loc1_EdgeServer" type="EDGE" cores="8" ram="32" storage="8000" bandwidth="1000" />
+	<device id="2" name="Loc2_EdgeServer" type="EDGE" cores="8" ram="32" storage="8000" bandwidth="1000" />
+	<device id="3" name="Loc3_EdgeServer" type="EDGE" cores="8" ram="32" storage="8000" bandwidth="1000" />
+</edge_devices>

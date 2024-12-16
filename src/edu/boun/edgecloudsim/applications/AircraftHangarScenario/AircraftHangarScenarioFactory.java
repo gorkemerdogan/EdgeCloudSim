@@ -10,9 +10,7 @@
 
 package edu.boun.edgecloudsim.applications.AircraftHangarScenario;
 
-import edu.boun.edgecloudsim.applications.sample_app2.SampleEdgeOrchestrator;
 import edu.boun.edgecloudsim.applications.sample_app2.SampleMobileDeviceManager;
-import edu.boun.edgecloudsim.applications.sample_app2.SampleNetworkModel;
 import edu.boun.edgecloudsim.cloud_server.CloudServerManager;
 import edu.boun.edgecloudsim.cloud_server.DefaultCloudServerManager;
 import edu.boun.edgecloudsim.core.ScenarioFactory;
@@ -25,33 +23,32 @@ import edu.boun.edgecloudsim.edge_server.EdgeServerManager;
 import edu.boun.edgecloudsim.mobility.MobilityModel;
 import edu.boun.edgecloudsim.mobility.NomadicMobility;
 import edu.boun.edgecloudsim.network.NetworkModel;
-import edu.boun.edgecloudsim.task_generator.IdleActiveLoadGenerator;
-import edu.boun.edgecloudsim.task_generator.LoadGeneratorModel;
 
 public class AircraftHangarScenarioFactory implements ScenarioFactory {
 	private int numOfMobileDevice;
 	private double simulationTime;
 	private String orchestratorPolicy;
 	private String simScenario;
-	
+	private int numberOfMobileDevices; // Number of cameras
+
 	AircraftHangarScenarioFactory(int _numOfMobileDevice,
 								  double _simulationTime,
 								  String _orchestratorPolicy,
-								  String _simScenario){
+								  String _simScenario) {
 		orchestratorPolicy = _orchestratorPolicy;
 		numOfMobileDevice = _numOfMobileDevice;
 		simulationTime = _simulationTime;
 		simScenario = _simScenario;
 	}
-	
+
 	@Override
-	public LoadGeneratorModel getLoadGeneratorModel() {
-		return new IdleActiveLoadGenerator(numOfMobileDevice, simulationTime, simScenario);
+	public AircraftHangarLoadGenerator getLoadGeneratorModel() {
+		return new AircraftHangarLoadGenerator("AircraftHangarLoadGenerator", 35); // 35 cameras
 	}
 
 	@Override
 	public EdgeOrchestrator getEdgeOrchestrator() {
-		return new SampleEdgeOrchestrator(orchestratorPolicy, simScenario);
+		return new AircraftHangarEdgeOrchestrator("policy", simScenario);
 	}
 
 	@Override
@@ -61,7 +58,7 @@ public class AircraftHangarScenarioFactory implements ScenarioFactory {
 
 	@Override
 	public NetworkModel getNetworkModel() {
-		return new SampleNetworkModel(numOfMobileDevice, simScenario);
+		return new AircraftHangarNetworkModel(numberOfMobileDevices, simScenario);
 	}
 
 	@Override

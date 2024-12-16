@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<applications>
+	<application id="1" name="VideoProcessing" type="VIDEO" inputSize="15000000" outputSize="1000" taskLength="1000" />
+</applications>
