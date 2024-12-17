@@ -10,7 +10,7 @@
 		<data_upload>40000</data_upload>
 		<data_download>2000</data_download>
 		<task_length>5000</task_length>
-		<required_core>4</required_core>
+		<required_core>32</required_core>
 		<vm_utilization_on_edge>0</vm_utilization_on_edge>
 		<vm_utilization_on_cloud>80</vm_utilization_on_cloud>
 		<vm_utilization_on_mobile>0</vm_utilization_on_mobile>
@@ -25,7 +25,7 @@
 		<data_upload>40000</data_upload>
 		<data_download>2000</data_download>
 		<task_length>5000</task_length>
-		<required_core>4</required_core>
+		<required_core>32</required_core>
 		<vm_utilization_on_edge>80</vm_utilization_on_edge>
 		<vm_utilization_on_cloud>0</vm_utilization_on_cloud>
 		<vm_utilization_on_mobile>0</vm_utilization_on_mobile>

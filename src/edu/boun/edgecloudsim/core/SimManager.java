@@ -112,15 +112,15 @@ public class SimManager extends SimEntity {
 		//Start Edge Datacenters & Generate VMs
 		edgeServerManager.startDatacenters();
 		edgeServerManager.createVmList(mobileDeviceManager.getId());
-		
+
 		//Start Edge Datacenters & Generate VMs
 		cloudServerManager.startDatacenters();
 		cloudServerManager.createVmList(mobileDeviceManager.getId());
-		
+
 		//Start Mobile Datacenters & Generate VMs
 		mobileServerManager.startDatacenters();
 		mobileServerManager.createVmList(mobileDeviceManager.getId());
-		
+
 		CloudSim.startSimulation();
 	}
 

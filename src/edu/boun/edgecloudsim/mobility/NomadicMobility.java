@@ -120,4 +120,12 @@ public class NomadicMobility extends MobilityModel {
 		return e.getValue();
 	}
 
+	protected void setTreeMapArray(List<TreeMap<Double, Location>> treeMapArray) {
+		this.treeMapArray = treeMapArray;
+	}
+
+	protected TreeMap<Double, Location> getTreeMap(int deviceId) {
+		return this.treeMapArray.get(deviceId);
+	}
+
 }
