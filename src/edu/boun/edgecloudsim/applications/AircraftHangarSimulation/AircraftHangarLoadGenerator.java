@@ -22,8 +22,8 @@ public class AircraftHangarLoadGenerator extends LoadGeneratorModel{
 
 		// Task parameters for 4K video streaming
 		int taskType = 0; 			// Define a single task type for video processing
-		double durationSec = 60;    // 60 second per task
-		int pesNumber = 16;         // Number of processing elements (cores) for the task
+		double durationSec = 360;   // 360 second per task
+		int pesNumber = 8;          // Number of processing elements (cores) for the task
 
 		/*
 		•	Resolution: 3840x2160 pixels (8,294,400 pixels per frame).
@@ -41,12 +41,18 @@ public class AircraftHangarLoadGenerator extends LoadGeneratorModel{
 
 		// Generate tasks for each device
 		for (int deviceId = 0; deviceId < numberOfMobileDevices; deviceId++) {
-			double currentTime = 0;
+			double activePeriod = 300.0;
+			double idlePeriod = 60.0;
+            //active period starts shortly after the simulation started (e.g. 10 seconds)
+            double virtualTime = SimUtils.getRandomDoubleNumber(
+                    SimSettings.CLIENT_ACTIVITY_START_TIME,
+                    SimSettings.CLIENT_ACTIVITY_START_TIME + activePeriod);
+			//virtualTime += SimUtils.getRandomDoubleNumber(30, 120); // Random delay between tasks
 
-			while (currentTime < simulationTime) {
+			while (virtualTime < simulationTime) {
 				// Randomize input size between 20000 KB and 40000 KB
 				// 4K stream size in KBps
-				long inputSizeKB = SimUtils.getRandomLongNumber(20000, 40000);
+				long inputSizeKB = SimUtils.getRandomLongNumber(25000, 40000);
 
 				// Randomize output size as a percentage of input size (10% to 30%)
 				// After edge processing (Assume 70-90% reduction)
@@ -54,9 +60,10 @@ public class AircraftHangarLoadGenerator extends LoadGeneratorModel{
 				long outputSizeKB = (long)(inputSizeKB * randomPercentage);
 
 				// Add the task to the list
-				taskList.add(new TaskProperty(currentTime, deviceId, taskType, pesNumber,
+				taskList.add(new TaskProperty(virtualTime, deviceId, taskType, pesNumber,
 						length, inputSizeKB, outputSizeKB));
-				currentTime += durationSec; // Continuous 1-second intervals
+				virtualTime += durationSec;
+				virtualTime += idlePeriod;
 			}
 		}
 	}
@@ -66,7 +73,6 @@ public class AircraftHangarLoadGenerator extends LoadGeneratorModel{
 		if (taskTypeOfDevices == null) {
 			taskTypeOfDevices = new int[numberOfMobileDevices];
 			for (int i = 0; i < numberOfMobileDevices; i++) {
-				// Randomly assign task type 0 or 1
 				taskTypeOfDevices[i] = SimUtils.getRandomNumber(0, 1);
 				System.out.println("Device " + i + " assigned TaskType: " + taskTypeOfDevices[i]);
 			}

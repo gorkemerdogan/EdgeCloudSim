@@ -22,8 +22,10 @@ import edu.boun.edgecloudsim.edge_orchestrator.EdgeOrchestrator;
 import edu.boun.edgecloudsim.edge_server.DefaultEdgeServerManager;
 import edu.boun.edgecloudsim.edge_server.EdgeServerManager;
 import edu.boun.edgecloudsim.mobility.MobilityModel;
+import edu.boun.edgecloudsim.mobility.NomadicMobility;
 import edu.boun.edgecloudsim.network.MM1Queue;
 import edu.boun.edgecloudsim.network.NetworkModel;
+import edu.boun.edgecloudsim.task_generator.IdleActiveLoadGenerator;
 import edu.boun.edgecloudsim.task_generator.LoadGeneratorModel;
 
 public class AircraftHangarScenarioFactory implements ScenarioFactory {
@@ -49,12 +51,13 @@ public class AircraftHangarScenarioFactory implements ScenarioFactory {
 
 	@Override
 	public EdgeOrchestrator getEdgeOrchestrator() {
+		//return new AircraftHangarEdgeOrchestrator("EDGE_PRIORITY", simScenario);
 		return new BasicEdgeOrchestrator(orchestratorPolicy, simScenario);
 	}
 
 	@Override
 	public MobilityModel getMobilityModel() {
-		return new AircraftHangarNomadicMobility(numOfMobileDevice,simulationTime);
+		return new NomadicMobility(numOfMobileDevice,simulationTime);
 	}
 
 	@Override
