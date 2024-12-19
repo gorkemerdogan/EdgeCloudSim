@@ -4,7 +4,7 @@
 %--------------------------------------------------------------
 function [ret_val] = getConfiguration(argType)
     if(argType == 1)
-        ret_val = 'D:\sim_results';
+        ret_val = '/Users/gorkemerdogan/IdeaProjects/EdgeCloudSim/sim_results/hangar_sim';
     elseif(argType == 2)
         ret_val = 1; %Number of iterations
     elseif(argType == 3)
@@ -16,9 +16,9 @@ function [ret_val] = getConfiguration(argType)
     elseif(argType == 6)
         ret_val = 1; %xTickLabelCoefficient
     elseif(argType == 7)
-        ret_val = {'EDGE_ONLY','NETWORK_BASED','UTILIZATION_BASED','HYBRID'};
+        ret_val = {'NETWORK_BASED','UTILIZATION_BASED','HYBRID'};
     elseif(argType == 8)
-        ret_val = {'edge only', 'network based', 'utilization','hybrid'};
+        ret_val = {'network based', 'utilization','hybrid'};
     elseif(argType == 9)
         ret_val=[10 3 12 12]; %position of figure
     elseif(argType == 10)
