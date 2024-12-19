@@ -21,49 +21,67 @@ public class AircraftHangarLoadGenerator extends LoadGeneratorModel{
 		taskList = new ArrayList<TaskProperty>();
 
 		// Task parameters for 4K video streaming
-		int taskType = 0; 			// Define a single task type for video processing
-		double durationSec = 360;   // 360 second per task
-		int pesNumber = 8;          // Number of processing elements (cores) for the task
+		int videoTaskType = 0;  // Task type for video processing
+		double videoDurationSec = 360;  // 360 seconds per task
+		int videoPesNumber = 8;  // Number of cores for video processing
+		long videoTaskLength = 14930000;  // Task length in MI (Million Instructions)
+
+		// Task parameters for image processing
+		int imageTaskType = 1;  // Task type for image processing
+		double imageDurationSec = 60;  // Assume 60 seconds per task
+		int imagePesNumber = 4;  // Number of cores for image processing
 
 		/*
-		•	Resolution: 3840x2160 pixels (8,294,400 pixels per frame).
-		•	Frame Rate: 30 frames per second (FPS), common for 4K video.
-		•	Total Frames: Multiply the duration (in seconds) by 30 FPS.
-		•	1000 instructions per pixel
-
-		MIs = (60*30 frames) * 8,294,400  * 1000 / 10^6 = 14,929,920,000 = 14.93 billion MIs
-
-		•	1 Minute	1,800 frames	14,930,000 MIs
-		•	2 Minutes	3,600 frames	29,860,000 MIs
-		•	3 Minutes	5,400 frames	44,790,000 MIs
+		 * Image processing workload
+		 * - Resolution: 3840 x 2160 pixels (4K)
+		 * - Instructions per pixel: 500
+		 * MIs = 3.840 * 2.160 * 500 / 10^6 = 4.147 MI per image
 		 */
-		long length = 14930000;           // Task length in MI (Million Instructions)
+		long imageTaskLength = 4147;  // Task length in MI for image processing
 
 		// Generate tasks for each device
 		for (int deviceId = 0; deviceId < numberOfMobileDevices; deviceId++) {
 			double activePeriod = 300.0;
 			double idlePeriod = 60.0;
-            //active period starts shortly after the simulation started (e.g. 10 seconds)
-            double virtualTime = SimUtils.getRandomDoubleNumber(
-                    SimSettings.CLIENT_ACTIVITY_START_TIME,
-                    SimSettings.CLIENT_ACTIVITY_START_TIME + activePeriod);
-			//virtualTime += SimUtils.getRandomDoubleNumber(30, 120); // Random delay between tasks
 
-			while (virtualTime < simulationTime) {
-				// Randomize input size between 20000 KB and 40000 KB
-				// 4K stream size in KBps
-				long inputSizeKB = SimUtils.getRandomLongNumber(25000, 40000);
+			// Virtual time for video processing tasks
+			double videoVirtualTime = SimUtils.getRandomDoubleNumber(
+					SimSettings.CLIENT_ACTIVITY_START_TIME,
+					SimSettings.CLIENT_ACTIVITY_START_TIME + activePeriod);
 
-				// Randomize output size as a percentage of input size (10% to 30%)
-				// After edge processing (Assume 70-90% reduction)
-				double randomPercentage = SimUtils.getRandomDoubleNumber(0.1, 0.3);
-				long outputSizeKB = (long)(inputSizeKB * randomPercentage);
+			while (videoVirtualTime < simulationTime) {
+				// Randomize input size for video processing
+				long videoInputSizeKB = SimUtils.getRandomLongNumber(25000, 40000);
 
-				// Add the task to the list
-				taskList.add(new TaskProperty(virtualTime, deviceId, taskType, pesNumber,
-						length, inputSizeKB, outputSizeKB));
-				virtualTime += durationSec;
-				virtualTime += idlePeriod;
+				// Randomize output size for video processing (10% to 30% of input size)
+				double videoOutputPercentage = SimUtils.getRandomDoubleNumber(0.1, 0.3);
+				long videoOutputSizeKB = (long) (videoInputSizeKB * videoOutputPercentage);
+
+				// Add video task to the list
+				taskList.add(new TaskProperty(videoVirtualTime, deviceId, videoTaskType, videoPesNumber,
+						videoTaskLength, videoInputSizeKB, videoOutputSizeKB));
+				videoVirtualTime += videoDurationSec;
+				videoVirtualTime += idlePeriod;
+			}
+
+			// Virtual time for image processing tasks
+			double imageVirtualTime = SimUtils.getRandomDoubleNumber(
+					SimSettings.CLIENT_ACTIVITY_START_TIME,
+					SimSettings.CLIENT_ACTIVITY_START_TIME + activePeriod);
+
+			while (imageVirtualTime < simulationTime) {
+				// Randomize input size for image processing (1 MB to 5 MB)
+				long imageInputSizeKB = SimUtils.getRandomLongNumber(1000, 5000);
+
+				// Randomize output size for image processing (50% to 70% of input size)
+				double imageOutputPercentage = SimUtils.getRandomDoubleNumber(0.5, 0.7);
+				long imageOutputSizeKB = (long) (imageInputSizeKB * imageOutputPercentage);
+
+				// Add image task to the list
+				taskList.add(new TaskProperty(imageVirtualTime, deviceId, imageTaskType, imagePesNumber,
+						imageTaskLength, imageInputSizeKB, imageOutputSizeKB));
+				imageVirtualTime += imageDurationSec;
+				imageVirtualTime += idlePeriod;
 			}
 		}
 	}

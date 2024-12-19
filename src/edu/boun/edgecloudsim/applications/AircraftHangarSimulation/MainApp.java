@@ -40,7 +40,7 @@ public class MainApp {
             configFile = "scripts/AircraftHangarSimulation/config/default_config.properties";
             applicationsFile = "scripts/AircraftHangarSimulation/config/applications.xml";
             edgeDevicesFile = "scripts/AircraftHangarSimulation/config/edge_devices.xml";
-            outputFolder = "sim_results/AircraftHangarSimulation/ite" + iterationNumber;
+            outputFolder = "sim_results/AircraftHangarSimulation/ite3";
         }
 
         //load settings from configuration file

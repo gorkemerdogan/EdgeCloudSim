@@ -4,21 +4,21 @@
 %--------------------------------------------------------------
 function [ret_val] = getConfiguration(argType)
     if(argType == 1)
-        ret_val = 'D:\sim_results';
+        ret_val = '/Users/gorkemerdogan/IdeaProjects/EdgeCloudSim/sim_results/AircraftHangarSimulation/';
     elseif(argType == 2)
         ret_val = 10; %Number of iterations
     elseif(argType == 3)
-        ret_val = 200; %min number of mobile device
+        ret_val = 30; %min number of mobile device
     elseif(argType == 4)
-        ret_val = 200; %step size of mobile device count
+        ret_val = 30; %step size of mobile device count
     elseif(argType == 5)
-        ret_val =2000; %max number of mobile device
+        ret_val =150; %max number of mobile device
     elseif(argType == 6)
         ret_val = 1; %xTickLabelCoefficient
     elseif(argType == 7)
-        ret_val = {'ONLY_EDGE','ONLY_MOBILE','HYBRID'};
+        ret_val = {'BEST_FIT'};
     elseif(argType == 8)
-        ret_val = {'only edge','only mobile','hybrid'};
+        ret_val = {'best fit'};
     elseif(argType == 9)
         ret_val=[10 3 12 12]; %position of figure
     elseif(argType == 10)
