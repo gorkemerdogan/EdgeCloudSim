@@ -52,7 +52,7 @@ public class MainApp {
 			configFile = "scripts/sample_app2/config/default_config.properties";
 			applicationsFile = "scripts/sample_app2/config/applications.xml";
 			edgeDevicesFile = "scripts/sample_app2/config/edge_devices.xml";
-			outputFolder = "sim_results/ite" + iterationNumber;
+			outputFolder = "sim_results/sample_app2/ite" + iterationNumber;
 		}
 
 		//load settings from configuration file
