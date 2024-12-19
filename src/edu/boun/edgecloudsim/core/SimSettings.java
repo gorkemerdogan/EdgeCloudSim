@@ -1,12 +1,12 @@
 /*
  * Title:        EdgeCloudSim - Simulation Settings class
- * 
- * Description: 
+ *
+ * Description:
  * SimSettings provides system wide simulation settings. It is a
  * singleton class and provides all necessary information to other modules.
  * If you need to use another simulation setting variable in your
  * config file, add related getter method in this class.
- *               
+ *
  * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
  * Copyright (c) 2017, Bogazici University, Istanbul, Turkey
  */
@@ -39,7 +39,7 @@ public class SimSettings {
 	public static enum VM_TYPES { MOBILE_VM, EDGE_VM, CLOUD_VM }
 
 	//enumarations for the VM types
-	public static enum NETWORK_DELAY_TYPES { WLAN_DELAY, MAN_DELAY, WAN_DELAY, GSM_DELAY }
+	public static enum NETWORK_DELAY_TYPES { WLAN_DELAY, MAN_DELAY, WAN_DELAY, GSM_DELAY, LAN_DELAY, WIFI_DELAY }
 
 	//predifined IDs for the components.
 	public static final int CLOUD_DATACENTER_ID = 1000;
@@ -147,7 +147,7 @@ public class SimSettings {
 			WARM_UP_PERIOD = (double)60 * Double.parseDouble(prop.getProperty("warm_up_period")); //seconds
 			INTERVAL_TO_GET_VM_LOAD_LOG = (double)60 * Double.parseDouble(prop.getProperty("vm_load_check_interval")); //seconds
 			INTERVAL_TO_GET_LOCATION_LOG = (double)60 * Double.parseDouble(prop.getProperty("location_check_interval")); //seconds
-			INTERVAL_TO_GET_AP_DELAY_LOG = (double)60 * Double.parseDouble(prop.getProperty("ap_delay_check_interval", "0")); //seconds		
+			INTERVAL_TO_GET_AP_DELAY_LOG = (double)60 * Double.parseDouble(prop.getProperty("ap_delay_check_interval", "0")); //seconds
 			FILE_LOG_ENABLED = Boolean.parseBoolean(prop.getProperty("file_log_enabled"));
 			DEEP_FILE_LOG_ENABLED = Boolean.parseBoolean(prop.getProperty("deep_file_log_enabled"));
 
@@ -237,7 +237,7 @@ public class SimSettings {
 	 */
 	public double getWarmUpPeriod()
 	{
-		return WARM_UP_PERIOD; 
+		return WARM_UP_PERIOD;
 	}
 
 	/**
@@ -245,7 +245,7 @@ public class SimSettings {
 	 */
 	public double getVmLoadLogInterval()
 	{
-		return INTERVAL_TO_GET_VM_LOAD_LOG; 
+		return INTERVAL_TO_GET_VM_LOAD_LOG;
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class SimSettings {
 	 */
 	public double getLocationLogInterval()
 	{
-		return INTERVAL_TO_GET_LOCATION_LOG; 
+		return INTERVAL_TO_GET_LOCATION_LOG;
 	}
 
 	/**
@@ -261,7 +261,7 @@ public class SimSettings {
 	 */
 	public double getApDelayLogInterval()
 	{
-		return INTERVAL_TO_GET_AP_DELAY_LOG; 
+		return INTERVAL_TO_GET_AP_DELAY_LOG;
 	}
 
 	/**
@@ -269,7 +269,7 @@ public class SimSettings {
 	 */
 	public boolean getDeepFileLoggingEnabled()
 	{
-		return FILE_LOG_ENABLED && DEEP_FILE_LOG_ENABLED; 
+		return FILE_LOG_ENABLED && DEEP_FILE_LOG_ENABLED;
 	}
 
 	/**
@@ -277,7 +277,7 @@ public class SimSettings {
 	 */
 	public boolean getFileLoggingEnabled()
 	{
-		return FILE_LOG_ENABLED; 
+		return FILE_LOG_ENABLED;
 	}
 
 	/**
@@ -325,7 +325,7 @@ public class SimSettings {
 	 */
 	public int getWanBandwidth()
 	{
-		return BANDWITH_WAN; 
+		return BANDWITH_WAN;
 	}
 
 	/**
@@ -525,7 +525,7 @@ public class SimSettings {
 	/**
 	 * returns mobility characteristic within an array
 	 * the result includes mean waiting time (minute) or each place type
-	 */ 
+	 */
 	public double[] getMobilityLookUpTable()
 	{
 		return mobilityLookUpTable;
@@ -548,7 +548,7 @@ public class SimSettings {
 	 * [11] vm utilization on mobile (%)
 	 * [12] delay sensitivity [0-1]
 	 * [13] maximum delay requirement (sec)
-	 */ 
+	 */
 	public double[][] getTaskLookUpTable()
 	{
 		return taskLookUpTable;
@@ -610,7 +610,7 @@ public class SimSettings {
 	private void parseApplicationsXML(String filePath)
 	{
 		Document doc = null;
-		try {	
+		try {
 			File devicesFile = new File(filePath);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -671,7 +671,7 @@ public class SimSettings {
 
 	private void parseEdgeDevicesXML(String filePath)
 	{
-		try {	
+		try {
 			File devicesFile = new File(filePath);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();

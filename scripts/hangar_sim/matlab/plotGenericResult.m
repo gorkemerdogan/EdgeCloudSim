@@ -23,8 +23,7 @@ function [] = plotGenericResult(rowOfset, columnOfset, yLabel, appType, calculat
                 try
                     mobileDeviceNumber = startOfMobileDeviceLoop + stepOfMobileDeviceLoop * (j - 1);
                     
-                    filePath = [folderPath, '/ite', int2str(s), '/SIMRESULT_TWO_TIER_WITH_EO_', ...
-                        char(scenarioType(i)), '_', int2str(mobileDeviceNumber), 'DEVICES_', appType, '_GENERIC.log'];
+                    filePath = strcat(folderPath,'/ite',int2str(s),'/SIMRESULT_TWO_TIER_WITH_EO_',char(scenarioType(i)),'_',int2str(mobileDeviceNumber),'DEVICES_',appType,'_GENERIC.log');
 
                     disp(['Attempting to read file: ', filePath]); % Debugging
                     readData = dlmread(filePath, ';', rowOfset, 0);

@@ -1,14 +1,16 @@
 /*
- * Title:        EdgeCloudSim - Edge Orchestrator
- * 
- * Description: 
- * SampleEdgeOrchestrator offloads tasks to proper server
- * by considering WAN bandwidth and edge server utilization.
- * After the target server is decided, the least loaded VM is selected.
- * If the target server is a remote edge server, MAN is used.
- * 
- * Licence:      GPL - http://www.gnu.org/copyleft/gpl.html
- * Copyright (c) 2017, Bogazici University, Istanbul, Turkey
+ * Title:        HangarSimEdgeOrchestrator - Custom Edge Orchestrator
+ *
+ * Description:
+ * This orchestrator determines the appropriate server (edge or cloud)
+ * to offload tasks based on Wi-Fi bandwidth, LAN conditions, and edge server utilization.
+ * After determining the target server, the least loaded VM is selected.
+ *
+ * Features:
+ * - Policy-based offloading: NETWORK_BASED, UTILIZATION_BASED, HYBRID.
+ * - Supports Wi-Fi and LAN communication.
+ *
+ * Author: Custom Implementation for Hangar Simulations.
  */
 
 package edu.boun.edgecloudsim.applications.hangar_sim;
@@ -31,7 +33,7 @@ import edu.boun.edgecloudsim.edge_client.Task;
 import edu.boun.edgecloudsim.utils.SimLogger;
 
 public class HangarSimEdgeOrchestrator extends EdgeOrchestrator {
-	
+
 	private int numberOfHost; //used by load balancer
 
 	public HangarSimEdgeOrchestrator(String _policy, String _simScenario) {
@@ -43,83 +45,68 @@ public class HangarSimEdgeOrchestrator extends EdgeOrchestrator {
 		numberOfHost=SimSettings.getInstance().getNumOfEdgeHosts();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see edu.boun.edgecloudsim.edge_orchestrator.EdgeOrchestrator#getDeviceToOffload(edu.boun.edgecloudsim.edge_client.Task)
-	 * 
-	 * It is assumed that the edge orchestrator app is running on the edge devices in a distributed manner
+	/**
+	 * Determines the target device (edge server or cloud) to offload the task.
 	 */
 	@Override
 	public int getDeviceToOffload(Task task) {
-		int result = 0;
-		
-		//RODO: return proper host ID
-		
-		if(simScenario.equals("SINGLE_TIER")){
-			result = SimSettings.GENERIC_EDGE_DEVICE_ID;
-		}
-		else if(simScenario.equals("TWO_TIER_WITH_EO")){
-			//dummy task to simulate a task with 1 Mbit file size to upload and download 
-			Task dummyTask = new Task(0, 0, 0, 0, 128, 128, new UtilizationModelFull(), new UtilizationModelFull(), new UtilizationModelFull());
-			
-			double wanDelay = SimManager.getInstance().getNetworkModel().getUploadDelay(task.getMobileDeviceId(),
-					SimSettings.CLOUD_DATACENTER_ID, dummyTask /* 1 Mbit */);
-			
-			double wanBW = (wanDelay == 0) ? 0 : (1 / wanDelay); /* Mbps */
-			
-			double edgeUtilization = SimManager.getInstance().getEdgeServerManager().getAvgUtilization();
-			
+		int result;
 
-			if(policy.equals("NETWORK_BASED")){
-				if(wanBW > 6)
-					result = SimSettings.CLOUD_DATACENTER_ID;
-				else
-					result = SimSettings.GENERIC_EDGE_DEVICE_ID;
-			}
-			else if(policy.equals("UTILIZATION_BASED")){
-				double utilization = edgeUtilization;
-				if(utilization > 80)
-					result = SimSettings.CLOUD_DATACENTER_ID;
-				else
-					result = SimSettings.GENERIC_EDGE_DEVICE_ID;
-			}
-			else if(policy.equals("HYBRID")){
-				double utilization = edgeUtilization;
-				if(wanBW > 6 && utilization > 80)
-					result = SimSettings.CLOUD_DATACENTER_ID;
-				else
-					result = SimSettings.GENERIC_EDGE_DEVICE_ID;
-			}
-			else {
-				SimLogger.printLine("Unknown edge orchestrator policy! Terminating simulation...");
+		if (simScenario.equals("SINGLE_TIER")) {
+			// All tasks are processed on the local edge server
+			result = SimSettings.GENERIC_EDGE_DEVICE_ID;
+		} else if (simScenario.equals("TWO_TIER_WITH_EO")) {
+			// Simulate a dummy task to evaluate network conditions
+			Task dummyTask = new Task(0, 0, 0, 0, 128, 128, null, null, null);
+
+			// Evaluate Wi-Fi delay for cloud offloading
+			double wifiDelay = SimManager.getInstance().getNetworkModel()
+					.getUploadDelay(task.getMobileDeviceId(), SimSettings.CLOUD_DATACENTER_ID, dummyTask);
+
+			// Calculate Wi-Fi bandwidth in Mbps
+			double wifiBW = (wifiDelay == 0) ? 0 : (1 / wifiDelay) * 1000; // Convert to Mbps
+
+			// Get edge server utilization
+			double edgeUtilization = SimManager.getInstance().getEdgeServerManager().getAvgUtilization();
+
+			// Offloading decision based on policy
+			if (policy.equals("NETWORK_BASED")) {
+				result = (wifiBW > 20) ? SimSettings.CLOUD_DATACENTER_ID : SimSettings.GENERIC_EDGE_DEVICE_ID;
+			} else if (policy.equals("UTILIZATION_BASED")) {
+				result = (edgeUtilization > 80) ? SimSettings.CLOUD_DATACENTER_ID : SimSettings.GENERIC_EDGE_DEVICE_ID;
+			} else if (policy.equals("HYBRID")) {
+				result = (wifiBW > 20 && edgeUtilization > 80) ? SimSettings.CLOUD_DATACENTER_ID : SimSettings.GENERIC_EDGE_DEVICE_ID;
+			} else {
+				SimLogger.printLine("Unknown policy: " + policy + ". Terminating simulation...");
 				System.exit(0);
+				return -1; // For compiler compliance
 			}
-		}
-		else {
-			SimLogger.printLine("Unknown simulation scenario! Terminating simulation...");
+		} else {
+			SimLogger.printLine("Unknown simulation scenario: " + simScenario + ". Terminating simulation...");
 			System.exit(0);
+			return -1; // For compiler compliance
 		}
+
 		return result;
 	}
 
 	@Override
 	public Vm getVmToOffload(Task task, int deviceId) {
 		Vm selectedVM = null;
-		
+
 		if(deviceId == SimSettings.CLOUD_DATACENTER_ID){
 			//Select VM on cloud devices via Least Loaded algorithm!
 			double selectedVmCapacity = 0; //start with min value
 			List<Host> list = SimManager.getInstance().getCloudServerManager().getDatacenter().getHostList();
 			for (int hostIndex=0; hostIndex < list.size(); hostIndex++) {
 				List<CloudVM> vmArray = SimManager.getInstance().getCloudServerManager().getVmList(hostIndex);
-				for(int vmIndex=0; vmIndex<vmArray.size(); vmIndex++){
-					double requiredCapacity = ((CpuUtilizationModel_Custom)task.getUtilizationModelCpu()).predictUtilization(vmArray.get(vmIndex).getVmType());
-					double targetVmCapacity = (double)100 - vmArray.get(vmIndex).getCloudletScheduler().getTotalUtilizationOfCpu(CloudSim.clock());
-					if(requiredCapacity <= targetVmCapacity && targetVmCapacity > selectedVmCapacity){
-						selectedVM = vmArray.get(vmIndex);
+                for (CloudVM cloudVM : vmArray) {
+					double targetVmCapacity = calculateVmCapacity(null, cloudVM, task);
+					if (targetVmCapacity > selectedVmCapacity) {
+						selectedVM = cloudVM;
 						selectedVmCapacity = targetVmCapacity;
 					}
-	            }
+                }
 			}
 		}
 		else if(deviceId == SimSettings.GENERIC_EDGE_DEVICE_ID){
@@ -127,22 +114,37 @@ public class HangarSimEdgeOrchestrator extends EdgeOrchestrator {
 			double selectedVmCapacity = 0; //start with min value
 			for(int hostIndex=0; hostIndex<numberOfHost; hostIndex++){
 				List<EdgeVM> vmArray = SimManager.getInstance().getEdgeServerManager().getVmList(hostIndex);
-				for(int vmIndex=0; vmIndex<vmArray.size(); vmIndex++){
-					double requiredCapacity = ((CpuUtilizationModel_Custom)task.getUtilizationModelCpu()).predictUtilization(vmArray.get(vmIndex).getVmType());
-					double targetVmCapacity = (double)100 - vmArray.get(vmIndex).getCloudletScheduler().getTotalUtilizationOfCpu(CloudSim.clock());
-					if(requiredCapacity <= targetVmCapacity && targetVmCapacity > selectedVmCapacity){
-						selectedVM = vmArray.get(vmIndex);
+                for (EdgeVM edgeVM : vmArray) {
+					double targetVmCapacity = calculateVmCapacity(edgeVM, null, task);
+					if (targetVmCapacity > selectedVmCapacity) {
+						selectedVM = edgeVM;
 						selectedVmCapacity = targetVmCapacity;
 					}
-				}
+                }
 			}
 		}
 		else{
 			SimLogger.printLine("Unknown device id! The simulation has been terminated.");
 			System.exit(0);
 		}
-		
+
 		return selectedVM;
+	}
+
+	/**
+	 * Calculates the available capacity of a VM for the given task.
+	 */
+	private double calculateVmCapacity(EdgeVM edgeVM, CloudVM cloudVM, Task task) {
+		double requiredCapacity = 0.0;
+		double availableCapacity = 0.0;
+		if (edgeVM != null) {
+			requiredCapacity = ((CpuUtilizationModel_Custom) task.getUtilizationModelCpu()).predictUtilization(edgeVM.getVmType());
+			availableCapacity = 100 - edgeVM.getCloudletScheduler().getTotalUtilizationOfCpu(CloudSim.clock());
+		} else if (cloudVM != null) {
+			requiredCapacity = ((CpuUtilizationModel_Custom) task.getUtilizationModelCpu()).predictUtilization(cloudVM.getVmType());
+			availableCapacity = 100 - cloudVM.getCloudletScheduler().getTotalUtilizationOfCpu(CloudSim.clock());
+		}
+		return (requiredCapacity <= availableCapacity) ? availableCapacity : 0;
 	}
 
 	@Override

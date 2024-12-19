@@ -4,7 +4,7 @@
 %--------------------------------------------------------------
 function [ret_val] = getConfiguration(argType)
     if(argType == 1)
-        ret_val = 'D:\sim_results';
+        ret_val = '/Users/gorkemerdogan/IdeaProjects/EdgeCloudSim/sim_results/sample_app2';
     elseif(argType == 2)
         ret_val = 1; %Number of iterations
     elseif(argType == 3)
