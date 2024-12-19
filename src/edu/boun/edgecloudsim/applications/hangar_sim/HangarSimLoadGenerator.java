@@ -11,20 +11,20 @@
  * Copyright (c) 2017, Bogazici University, Istanbul, Turkey
  */
 
-package edu.boun.edgecloudsim.task_generator;
+package edu.boun.edgecloudsim.applications.hangar_sim;
+
+import edu.boun.edgecloudsim.core.SimSettings;
+import edu.boun.edgecloudsim.task_generator.LoadGeneratorModel;
+import edu.boun.edgecloudsim.utils.SimLogger;
+import edu.boun.edgecloudsim.utils.SimUtils;
+import edu.boun.edgecloudsim.utils.TaskProperty;
+import org.apache.commons.math3.distribution.ExponentialDistribution;
 
 import java.util.ArrayList;
 
-import org.apache.commons.math3.distribution.ExponentialDistribution;
-
-import edu.boun.edgecloudsim.core.SimSettings;
-import edu.boun.edgecloudsim.utils.TaskProperty;
-import edu.boun.edgecloudsim.utils.SimLogger;
-import edu.boun.edgecloudsim.utils.SimUtils;
-
-public class IdleActiveLoadGenerator extends LoadGeneratorModel{
+public class HangarSimLoadGenerator extends LoadGeneratorModel {
 	int taskTypeOfDevices[];
-	public IdleActiveLoadGenerator(int _numberOfMobileDevices, double _simulationTime, String _simScenario) {
+	public HangarSimLoadGenerator(int _numberOfMobileDevices, double _simulationTime, String _simScenario) {
 		super(_numberOfMobileDevices, _simulationTime, _simScenario);
 	}
 
