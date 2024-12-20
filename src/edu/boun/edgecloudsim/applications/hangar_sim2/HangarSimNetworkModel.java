@@ -53,7 +53,7 @@ public class HangarSimNetworkModel extends NetworkModel {
 
 	// Generate LAN delays programmatically
 	static {
-		double baseBandwidth = 100000; // Starting bandwidth (Kbps)
+		double baseBandwidth = 1000000; // Starting bandwidth (Kbps)
 		double decayFactor = 0.96; // Decay factor for exponential drop
 
 		for (int i = 0; i < experimentalLanDelay.length; i++) {
@@ -65,7 +65,7 @@ public class HangarSimNetworkModel extends NetworkModel {
 
 	// Generate Wi-Fi delays programmatically
 	static {
-		double baseBandwidth = 100000; // Starting bandwidth (Kbps)
+		double baseBandwidth = 500000; // Starting bandwidth (Kbps)
 		double decayFactor = 0.95; // Decay factor for exponential drop
 
 		for (int i = 0; i < experimentalWanDelay.length; i++) {

@@ -4,15 +4,15 @@
 %--------------------------------------------------------------
 function [ret_val] = getConfiguration(argType)
     if(argType == 1)
-        ret_val = '/Users/gorkemerdogan/IdeaProjects/EdgeCloudSim/sim_results/hangar_sim2';
+        ret_val = '/Users/gorkemerdogan/IdeaProjects/EdgeCloudSim/sim_results/hangar_sim4';
     elseif(argType == 2)
-        ret_val = 3; %Number of iterations
+        ret_val = 5; %Number of iterations
     elseif(argType == 3)
-        ret_val = 20; %min number of mobile device
+        ret_val = 30; %min number of mobile device
     elseif(argType == 4)
-        ret_val = 5; %step size of mobile device count
+        ret_val = 10; %step size of mobile device count
     elseif(argType == 5)
-        ret_val =180; %max number of mobile device
+        ret_val =120; %max number of mobile device
     elseif(argType == 6)
         ret_val = 1; %xTickLabelCoefficient
     elseif(argType == 7)
@@ -22,7 +22,7 @@ function [ret_val] = getConfiguration(argType)
     elseif(argType == 9)
         ret_val=[10 3 12 12]; %position of figure
     elseif(argType == 10)
-        ret_val = 'Number of Mobile Devices'; %Common text for x axis
+        ret_val = 'Number of Cameras'; %Common text for x axis
     elseif(argType == 11)
         ret_val = 1; %return 1 if you want to save figure as pdf
     elseif(argType == 12)
