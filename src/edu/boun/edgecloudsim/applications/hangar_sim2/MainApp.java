@@ -34,7 +34,7 @@ public class MainApp {
 		//enable console output and file output of this application
 		SimLogger.enablePrintLog();
 
-		int iterationNumber = 1;
+		int iterationNumber = 7;
 		String configFile = "";
 		String outputFolder = "";
 		String edgeDevicesFile = "";
@@ -48,10 +48,10 @@ public class MainApp {
 		}
 		else{
 			SimLogger.printLine("Simulation setting file, output folder and iteration number are not provided! Using default ones...");
-			configFile = "scripts/hangar_sim/config/default_config.properties";
-			applicationsFile = "scripts/hangar_sim/config/applications.xml";
-			edgeDevicesFile = "scripts/hangar_sim/config/edge_devices.xml";
-			outputFolder = "sim_results/ite" + iterationNumber;
+			configFile = "scripts/hangar_sim2/config/default_config.properties";
+			applicationsFile = "scripts/hangar_sim2/config/applications.xml";
+			edgeDevicesFile = "scripts/hangar_sim2/config/edge_devices.xml";
+			outputFolder = "sim_results/hangar_sim2/ite" + iterationNumber;
 		}
 
 		//load settings from configuration file

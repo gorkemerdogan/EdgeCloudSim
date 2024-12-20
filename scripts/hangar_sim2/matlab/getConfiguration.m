@@ -4,13 +4,13 @@
 %--------------------------------------------------------------
 function [ret_val] = getConfiguration(argType)
     if(argType == 1)
-        ret_val = '/Users/gorkemerdogan/IdeaProjects/EdgeCloudSim/sim_results/hangar_sim';
+        ret_val = '/Users/gorkemerdogan/IdeaProjects/EdgeCloudSim/sim_results/hangar_sim2';
     elseif(argType == 2)
         ret_val = 3; %Number of iterations
     elseif(argType == 3)
-        ret_val = 30; %min number of mobile device
+        ret_val = 20; %min number of mobile device
     elseif(argType == 4)
-        ret_val = 30; %step size of mobile device count
+        ret_val = 5; %step size of mobile device count
     elseif(argType == 5)
         ret_val =180; %max number of mobile device
     elseif(argType == 6)
