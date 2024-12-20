@@ -9,6 +9,7 @@
 
 package edu.boun.edgecloudsim.applications.sample_app2;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -40,6 +41,7 @@ public class MainApp {
 		String outputFolder = "";
 		String edgeDevicesFile = "";
 		String applicationsFile = "";
+
 		if (args.length == 5){
 			configFile = args[0];
 			edgeDevicesFile = args[1];
@@ -52,12 +54,28 @@ public class MainApp {
 			configFile = "scripts/sample_app2/config/default_config.properties";
 			applicationsFile = "scripts/sample_app2/config/applications.xml";
 			edgeDevicesFile = "scripts/sample_app2/config/edge_devices.xml";
+<<<<<<< HEAD
 			outputFolder = "sim_results/sample_app2/ite" + iterationNumber;
+=======
+
+			outputFolder = "sim_results/ite" + iterationNumber;
+
+			File outputDir = new File(outputFolder);
+			if (!outputDir.exists()) {
+				if (outputDir.mkdirs()) {
+					SimLogger.printLine("Output folder created: " + outputFolder);
+				} else {
+					SimLogger.printLine("Failed to create output folder: " + outputFolder);
+					System.exit(0);
+				}
+			}
+
+>>>>>>> origin/master
 		}
 
 		//load settings from configuration file
 		SimSettings SS = SimSettings.getInstance();
-		if(SS.initialize(configFile, edgeDevicesFile, applicationsFile) == false){
+		if(!SS.initialize(configFile, edgeDevicesFile, applicationsFile)){
 			SimLogger.printLine("cannot initialize simulation settings!");
 			System.exit(0);
 		}

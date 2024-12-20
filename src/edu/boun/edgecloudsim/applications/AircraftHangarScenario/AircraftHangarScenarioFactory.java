@@ -8,47 +8,47 @@
  * Copyright (c) 2017, Bogazici University, Istanbul, Turkey
  */
 
-package edu.boun.edgecloudsim.applications.sample_app2;
+package edu.boun.edgecloudsim.applications.AircraftHangarScenario;
 
-import edu.boun.edgecloudsim.applications.AircraftHangarScenario.AircraftHangarLoadGenerator;
+import edu.boun.edgecloudsim.applications.sample_app2.SampleMobileDeviceManager;
 import edu.boun.edgecloudsim.cloud_server.CloudServerManager;
 import edu.boun.edgecloudsim.cloud_server.DefaultCloudServerManager;
 import edu.boun.edgecloudsim.core.ScenarioFactory;
-import edu.boun.edgecloudsim.edge_orchestrator.EdgeOrchestrator;
-import edu.boun.edgecloudsim.edge_server.DefaultEdgeServerManager;
-import edu.boun.edgecloudsim.edge_server.EdgeServerManager;
 import edu.boun.edgecloudsim.edge_client.MobileDeviceManager;
 import edu.boun.edgecloudsim.edge_client.mobile_processing_unit.DefaultMobileServerManager;
 import edu.boun.edgecloudsim.edge_client.mobile_processing_unit.MobileServerManager;
+import edu.boun.edgecloudsim.edge_orchestrator.EdgeOrchestrator;
+import edu.boun.edgecloudsim.edge_server.DefaultEdgeServerManager;
+import edu.boun.edgecloudsim.edge_server.EdgeServerManager;
 import edu.boun.edgecloudsim.mobility.MobilityModel;
 import edu.boun.edgecloudsim.mobility.NomadicMobility;
-import edu.boun.edgecloudsim.task_generator.IdleActiveLoadGenerator;
 import edu.boun.edgecloudsim.network.NetworkModel;
 
-public class SampleScenarioFactory implements ScenarioFactory {
+public class AircraftHangarScenarioFactory implements ScenarioFactory {
 	private int numOfMobileDevice;
 	private double simulationTime;
 	private String orchestratorPolicy;
 	private String simScenario;
-	
-	SampleScenarioFactory(int _numOfMobileDevice,
-			double _simulationTime,
-			String _orchestratorPolicy,
-			String _simScenario){
+	private int numberOfMobileDevices; // Number of cameras
+
+	AircraftHangarScenarioFactory(int _numOfMobileDevice,
+								  double _simulationTime,
+								  String _orchestratorPolicy,
+								  String _simScenario) {
 		orchestratorPolicy = _orchestratorPolicy;
 		numOfMobileDevice = _numOfMobileDevice;
 		simulationTime = _simulationTime;
 		simScenario = _simScenario;
 	}
-	
+
 	@Override
 	public AircraftHangarLoadGenerator getLoadGeneratorModel() {
-		return new IdleActiveLoadGenerator(numOfMobileDevice, simulationTime, simScenario);
+		return new AircraftHangarLoadGenerator("AircraftHangarLoadGenerator", 35); // 35 cameras
 	}
 
 	@Override
 	public EdgeOrchestrator getEdgeOrchestrator() {
-		return new SampleEdgeOrchestrator(orchestratorPolicy, simScenario);
+		return new AircraftHangarEdgeOrchestrator("policy", simScenario);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class SampleScenarioFactory implements ScenarioFactory {
 
 	@Override
 	public NetworkModel getNetworkModel() {
-		return new SampleNetworkModel(numOfMobileDevice, simScenario);
+		return new AircraftHangarNetworkModel(numberOfMobileDevices, simScenario);
 	}
 
 	@Override
